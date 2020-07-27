@@ -1,35 +1,83 @@
 import sqlite3
 from sqlite3 import Error
 
-def create_connection(db_file):
+def create_connection():
     conn = None
     try:
-        conn = sqlite3.connect(db_file)
-        print(sqlite3.version)
-        return conn
-    except Error as e:
-        print(e)
-        return None
+        conn = sqlite3.connect(r"D:\SQLite\db\employees.db") 
+        print("Connected To Database")
+    except Error as err:
+        print(err.args[0]   )
+    return conn
 
-def create_table(db_file, table_sql):
-    try: 
-        conn = create_connection(db_file)
-        c = conn.cursor()
-        c.execute(table_sql)
-
-        sql = '''INSERT INTO employees (id, name, avatar, createdAt) VALUES (1, "Mayank", "Blank", "Dont Know...")'''
-
-        c.execute(sql)
-
-        conn.close()
-    except Error as e:
-        print(e)
-
-table_sql = """ CREATE TABLE IF NOT EXISTS employees (
-                id integer PRIMARY KEY,
+def create_table():
+    conn = create_connection()
+    try:
+        cur = conn.cursor()
+        cur.execute("""
+            CREATE TABLE IF NOT EXISTS empListData (
+                id integer PRIMARY_KEY,
                 name text NOT NULL,
                 avatar text,
                 createdAt text
-            ); """
+            );
+        """)
+    except Error as err:
+        print(err)
+    finally:
+        if conn: conn.close()
 
-create_table(r"D:\SQLite\database\employeeDetails", table_sql)
+def insertValue():
+    create_table()
+    conn = create_connection()
+    try:
+        cur = conn.cursor()
+        cur.execute("""
+            INSERT INTO empListData(id, name, avatar, createdAt) VALUES(1, "Mayank", "Not Defined", "Not Created");
+        """)
+        conn.commit()
+    except Error as err:
+        print(err.args[0])
+    finally:
+        conn.close()
+
+def select_data():
+    conn = create_connection()
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT * FROM empListData")
+        rows = cur.fetchall()
+        for data in rows:
+            print(data)
+    except Error as err:
+        print(err)
+
+def delete_data():
+    conn = create_connection()
+    try:
+        cur = conn.cursor()
+        cur.execute("DELETE FROM empListData where id=1")
+        conn.commit()
+    except Error as err:
+        print(err.args[0])
+    finally:
+        if conn:
+            conn.close()
+
+
+def update_data():
+    conn = create_connection()
+    try:
+        cur = conn.cursor()
+        cur.execute("""
+            UPDATE empListData SET name = "Anshul" where id = 1
+        """)
+        conn.commit()
+    except Error as err:
+        print(err)
+    finally:
+        conn.close()
+
+select_data()
+update_data()
+select_data()

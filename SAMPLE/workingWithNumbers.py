@@ -13,6 +13,15 @@ def create_connection(db_file):
         if conn:
             conn.close()
 
+#create_connection(r"D:\SQLite\db\employees.db")
+
+create_projects_table_sql = """ CREATE TABLE IF NOT EXISTS empList (
+                            id integer PRIMARY KEY,
+                            name text NOT NULL,
+                            avatar text,
+                            createdAt text
+                        ); """
+
 def create_table(db_file, create_table_sql):
     conn = sqlite3.connect(db_file)
     try:
@@ -21,14 +30,18 @@ def create_table(db_file, create_table_sql):
     except Error as e:
         print(e)
 
+#create_table(r"D:\SQLite\db\employees.db", create_projects_table_sql)
+
 def create_employee():
     conn = sqlite3.connect(r"D:\SQLite\db\employees.db")
     sql = ''' INSERT INTO empList(id,name, avatar, createdAt)
               VALUES(?,?,?,?) '''
     cur = conn.cursor()
-    cur.execute(sql, (1, "Mayank", "No Avatar", "Today"))
+    cur.execute(sql, (4, "Mayank", "No Avatar", "Today"))
     conn.commit()
     return cur.lastrowid
+
+#create_employee()
 
 def select_all_tasks():
     conn = sqlite3.connect(r"D:\SQLite\db\employees.db")
@@ -40,14 +53,18 @@ def select_all_tasks():
     for row in rows:
         print(row)
 
-def delete_task(conn, id):
+#select_all_tasks()
+
+def delete_task():
     conn = sqlite3.connect(r"D:\SQLite\db\employees.db")
-    sql = 'DELETE FROM empList WHERE id=1'
+    sql = 'DELETE FROM empList WHERE id=2'
     cur = conn.cursor()
     cur.execute(sql)
     conn.commit()
 
-#delete_task()
+delete_task()
+
+select_all_tasks()
 
 def update_task():
     conn = sqlite3.connect(r"D:\SQLite\db\employees.db")
@@ -58,7 +75,7 @@ def update_task():
     cur.execute(sql, ("Anshul", 1))
     conn.commit()
 
-update_task()
+#update_task()
 
 #select_all_tasks()
 
