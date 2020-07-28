@@ -33,7 +33,11 @@ def insertValue():
     try:
         cur = conn.cursor()
         cur.execute("""
-            INSERT INTO empListData(id, name, avatar, createdAt) VALUES(1, "Mayank", "Not Defined", "Not Created");
+            INSERT INTO empListData (id, name, avatar, createdAt)
+            VALUES
+            (11, "Mayank", "", ""),
+            (2, "Anshul", "", ""),
+            (3, "Ankit", "", "");
         """)
         conn.commit()
     except Error as err:
@@ -78,6 +82,5 @@ def update_data():
     finally:
         conn.close()
 
-select_data()
-update_data()
+insertValue()
 select_data()
